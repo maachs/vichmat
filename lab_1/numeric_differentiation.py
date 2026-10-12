@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Evaluation point
-x0 = 1.0
+x0 = float(input("Enter evaluation point x0: "))
 
 # Differentiation step sizes: hn = 2 / 2^n for n = 1..21
 n_vals = np.arange(1, 22)
