@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 # Evaluation point
 x0 = float(input("Enter evaluation point x0: "))
+if not math.isfinite(x0) or x0 <= 0:
+    raise ValueError("x0 must be a finite positive number so all stencil points remain in the domains of ln(x+3) and sqrt(x+3).")
 
 # Differentiation step sizes: hn = 2 / 2^n for n = 1..21
 n_vals = np.arange(1, 22)
@@ -65,28 +68,30 @@ methods = [
     {"name": "Method 5: O(h^6)", "func": method_5}
 ]
 
-# Plotting
 # Plotting and saving figures
-for idx, item in enumerate(funcs, start=1):
-    plt.figure(figsize=(10, 6))
+for item in funcs:
+    fig, ax = plt.subplots(figsize=(10, 6))
 
     true_val = item["df"](x0)
 
     for m in methods:
         approx_val = m["func"](item["f"], x0, h)
         error = np.abs(approx_val - true_val)
-        plt.loglog(h, error, marker='o', markersize=4, label=m["name"])
+        ax.loglog(h, error, marker='o', markersize=4, label=m["name"])
 
-    plt.title(f"Absolute Error of Numerical Differentiation\nFunction: {item['name']} at x = {x0}")
-    plt.xlabel("Differentiation Step (h)")
-    plt.ylabel("Absolute Error: |f'_{num}(x) - f'_{exact}(x)|")
-    plt.grid(True, which="both", ls="--", alpha=0.5)
-    plt.gca().invert_xaxis()
-    plt.legend()
-    plt.tight_layout()
+    ax.set_title(f"Absolute Error of Numerical Differentiation\nFunction: {item['name']} at x = {x0}")
+    ax.set_xlabel("Differentiation Step (h)")
+    ax.set_ylabel(r"Absolute Error $|f'_{\mathrm{num}}(x_0)-f'_{\mathrm{exact}}(x_0)|$")
+    ax.grid(True, which="both", ls="--", alpha=0.5)
+    ax.invert_xaxis()
+    ax.legend()
+    fig.tight_layout()
 
     # Save each figure to disk
     output_filename = f"error_plot_func_{item['filename']}.png"
-    plt.savefig(output_filename, dpi=300)
-    plt.close()
+    fig.savefig(output_filename, dpi=300)
     print(f"Saved: {output_filename}")
+
+# Keep all five figures open in separate windows when using an interactive backend.
+plt.show()
+plt.close('all')
