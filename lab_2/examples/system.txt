@@ -1,0 +1,6 @@
+# A system with the known solution x = (1, 2, 3).
+# First n, then n rows containing A coefficients followed by the right-hand side.
+3
+4 -1 0 2
+-1 4 -1 4
+0 -1 3 7

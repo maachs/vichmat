@@ -1,0 +1,78 @@
+System: Variant m; unknowns: 20
+Symmetric: True
+Positive definite: True
+Strict diagonal dominance: True
+Nonzero diagonal: True
+Stopping rule: ||f-Ax||_2 <= 1e-12 + 1e-10 * ||f||_2
+Initial guess: zero; iteration limit: 10000
+SOR omega: 1.05
+Constant gradient descent step: 0.0819672131148
+
+Augmented matrix [A | f]:
+10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 1.0
+1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 2.0
+0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 3.0
+0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 4.0
+0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 5.0
+0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 6.0
+0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 7.0
+0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 8.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 9.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 10.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 | 11.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 | 12.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 0.0 | 13.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 0.0 | 14.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 0.0 | 15.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 0.0 | 16.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 0.0 | 17.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 0.1 | 18.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 1.0 | 19.0
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 1.0 10.0 | 20.0
+
+Gaussian elimination (partial pivoting): converged
+Residual norm: 3.3893637946200144e-15
+Relative residual: 6.326699942958131e-17
+
+LU factorization: converged
+Residual norm: 2.710399819191012e-15
+Relative residual: 5.0593230531017624e-17
+
+Jacobi: converged
+Iterations: 15
+Residual norm: 4.9760485329690005e-09
+Relative residual: 9.288458801520109e-11
+
+Gauss-Seidel: converged
+Iterations: 10
+Residual norm: 4.378144604979942e-09
+Relative residual: 8.172391310297347e-11
+
+Successive over-relaxation (SOR): converged
+Iterations: 12
+Residual norm: 5.246028665797844e-09
+Relative residual: 9.792412757032154e-11
+
+Gradient descent: converged
+Iterations: 17
+Residual norm: 3.745488697055329e-09
+Relative residual: 6.991454609748354e-11
+Details: Constant step tau=0.0819672131148.
+
+Minimal residual: converged
+Iterations: 12
+Residual norm: 5.3315770732555255e-09
+Relative residual: 9.952100278755785e-11
+
+Conjugate gradient (CG): converged
+Iterations: 10
+Residual norm: 1.4801208092213132e-09
+Relative residual: 2.7628430604397442e-11
+
+BiCGSTAB: converged
+Iterations: 6
+Residual norm: 2.2161784827376464e-09
+Relative residual: 4.136792958778043e-11
+
+For f=0, the relative residual field contains the absolute residual.
+solutions.csv contains solutions, or the last approximation when convergence failed.
