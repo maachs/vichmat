@@ -3,7 +3,7 @@
 from dataclasses import dataclass, field
 from math import inf, isfinite
 
-from linalg import Matrix, Vector, norm, residual
+from linalg import Matrix, Vector, is_positive_definite, norm, residual
 
 METHOD_NAMES = {
     "gauss": "Gaussian elimination (partial pivoting)",
@@ -39,7 +39,11 @@ class Options:
             raise ValueError("Tolerances must be finite nonnegative numbers.")
         if self.rtol == self.atol == 0:
             raise ValueError("At least one tolerance must be positive.")
-        if isinstance(self.max_iterations, bool) or not isinstance(self.max_iterations, int) or self.max_iterations < 1:
+        if (
+            isinstance(self.max_iterations, bool)
+            or not isinstance(self.max_iterations, int)
+            or self.max_iterations < 1
+        ):
             raise ValueError("The iteration limit must be a positive integer.")
         if not isfinite(self.omega) or not 1 <= self.omega < 2:
             raise ValueError("Successive over-relaxation requires 1 <= omega < 2.")
@@ -62,9 +66,21 @@ class Result:
     is_iterative: bool = True
 
 
+def check_positive_definite(method: str, a: Matrix) -> Result | None:
+    if not is_positive_definite(a):
+        return Result(
+            method, "not_applicable",
+            detail="This method requires a symmetric positive definite matrix.",
+        )
+    return None
+
+
 class IterationState:
     def __init__(self, method: str, a: Matrix, f: Vector, options: Options):
-        self._method, self._a, self._f, self._options = method, a, f, options
+        self._method = method
+        self._a = a
+        self._f = f
+        self._options = options
         self._x = [0.0] * len(f)
         self._f_norm = norm(f)
         self._scale = self._f_norm if self._f_norm else 1.0
@@ -107,8 +123,14 @@ class IterationState:
         if status == "diverged" and not detail:
             detail = "The residual grew by a factor above 10^12, or arithmetic overflow occurred."
         return Result(
-            self._method, status, self.x, len(self._history) - 1,
-            self._history[-1], self._history[-1] / self._scale, self._history[:], detail,
+            method=self._method,
+            status=status,
+            x=self.x,
+            iterations=len(self._history) - 1,
+            residual_norm=self._history[-1],
+            relative_residual=self._history[-1] / self._scale,
+            history=self._history[:],
+            detail=detail,
         )
 
 
@@ -120,6 +142,10 @@ def direct_result(method: str, a: Matrix, f: Vector, x: Vector, options: Options
     else:
         status = "converged" if value <= options.atol + options.rtol * f_norm else "inaccurate"
     return Result(
-        method, status, x, residual_norm=value,
-        relative_residual=value / (f_norm if f_norm else 1.0), is_iterative=False,
+        method=method,
+        status=status,
+        x=x,
+        residual_norm=value,
+        relative_residual=value / (f_norm if f_norm else 1.0),
+        is_iterative=False,
     )

@@ -1,19 +1,18 @@
 """Unpreconditioned conjugate gradient with true residual monitoring."""
 
 from linalg import Matrix, Vector, dot, matvec, norm
-from solvers.base import LinearSolver
-from solvers.common import IterationState, Options, Result
+from solvers.common import IterationState, Options, Result, check_positive_definite
 
 
-class ConjugateGradientSolver(LinearSolver):
-    method = "cg"
-    requires_positive_definite = True
-
-    def _solve(self, a: Matrix, f: Vector, options: Options) -> Result:
-        """Standard CG for SPD matrices, checked by the common solver interface."""
+def conjugate_gradient(a: Matrix, f: Vector, options: Options) -> Result:
+    """Standard CG with a positive definiteness check before iteration."""
+    inapplicable = check_positive_definite("cg", a)
+    if inapplicable is not None:
+        return inapplicable
+    try:
         state = IterationState("cg", a, f, options)
         initial = state.initial_result()
-        if initial:
+        if initial is not None:
             return initial
         r, p = f[:], f[:]
         rr = dot(r, r)
@@ -39,3 +38,5 @@ class ConjugateGradientSolver(LinearSolver):
             p = [ri + beta * pi for ri, pi in zip(new_r, p)]
             r, rr = new_r, new_rr
         return state.finish("iteration_limit")
+    except (ArithmeticError, ValueError) as error:
+        return Result("cg", "breakdown", detail=f"Numerical arithmetic failed: {error}")

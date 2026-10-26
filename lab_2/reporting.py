@@ -60,8 +60,10 @@ def save_solutions(system: LinearSystem, results: list[Result], output: Path) ->
         writer.writerow(["method", "status", "iterations", "residual_norm", "relative_residual", "detail"]
                         + [f"x{i + 1}" for i in range(len(system.f))])
         for result in results:
+            solution = result.x if result.x is not None else [None] * len(system.f)
+            iterations = result.iterations if result.is_iterative else ""
             writer.writerow([
-                result.method, result.status, result.iterations if result.is_iterative else "",
+                result.method, result.status, iterations,
                 result.residual_norm, result.relative_residual, result.detail,
-            ] + (result.x if result.x is not None else [None] * len(system.f)))
+            ] + solution)
     return path

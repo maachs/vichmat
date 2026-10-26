@@ -1,24 +1,19 @@
 import errno
-import sys
 from pathlib import Path
 
 from linalg import MatrixProperties
 from reporting import print_solutions, save_report, save_solutions
-from solvers import default_solvers
+from solvers import SOLVERS
 from solvers.common import Options
 from systems import LinearSystem, read_system, variant_m
 
 
 def describe_file_error(error: OSError) -> str:
-    descriptions = {
-        errno.ENOENT: "File or directory not found",
-        errno.EACCES: "Permission denied",
-        errno.EPERM: "Operation not permitted",
-        errno.EISDIR: "Expected a file, but found a directory",
-        errno.ENOTDIR: "A path component is not a directory",
-        errno.ENOSPC: "Not enough free disk space",
-    }
-    description = descriptions.get(error.errno, f"File operation failed (OS error {error.errno})")
+    """Use English exception names and codes regardless of the OS language."""
+    description = type(error).__name__
+    code = errno.errorcode.get(error.errno, error.errno)
+    if code is not None:
+        description += f" ({code})"
     return f"{description}: {error.filename}" if error.filename else description
 
 
@@ -56,7 +51,7 @@ def main() -> int:
         options = Options()
         output = Path(__file__).resolve().parent / "results"
         properties = MatrixProperties.analyze(system.a)
-        results = [solver.solve(system, options, properties) for solver in default_solvers()]
+        results = [solve(system.a, system.f, options) for solve in SOLVERS]
         print_solutions(results)
         save_solutions(system, results, output)
         report = save_report(system, options, properties, results, output)
@@ -71,9 +66,9 @@ def main() -> int:
                 stream.write("On Ubuntu, install Matplotlib with: sudo apt install python3-matplotlib\n")
             print("\nCould not save the plot. See results/report.txt.")
             return 1
-        return 0 if any(result.status == "converged" for result in results) and all(
-            result.status in ("converged", "not_applicable") for result in results
-        ) else 2
+        has_solution = any(result.status == "converged" for result in results)
+        has_failure = any(result.status not in ("converged", "not_applicable") for result in results)
+        return 0 if has_solution and not has_failure else 2
     except OSError as error:
         print(f"Error: {describe_file_error(error)}")
         return 1

@@ -5,7 +5,6 @@ from math import fsum
 from linalg import (
     Matrix, Vector, backward_substitution, forward_substitution, is_small_pivot,
 )
-from solvers.base import LinearSolver
 from solvers.common import Options, Result, direct_result
 
 
@@ -26,14 +25,13 @@ def lu_decompose(a: Matrix) -> tuple[Matrix, Matrix]:
     return lower, upper
 
 
-class LUFactorizationSolver(LinearSolver):
-    method = "lu"
-    is_iterative = False
-
-    def _solve(self, a: Matrix, f: Vector, options: Options) -> Result:
+def lu_factorization(a: Matrix, f: Vector, options: Options) -> Result:
+    try:
         try:
             lower, upper = lu_decompose(a)
         except ArithmeticError as error:
-            return Result("lu", "not_applicable", detail=str(error))
+            return Result("lu", "not_applicable", is_iterative=False, detail=str(error))
         y = forward_substitution(lower, f)
         return direct_result("lu", a, f, backward_substitution(upper, y), options)
+    except (ArithmeticError, ValueError) as error:
+        return Result("lu", "breakdown", detail=f"Numerical arithmetic failed: {error}", is_iterative=False)

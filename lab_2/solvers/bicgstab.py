@@ -3,7 +3,6 @@
 from sys import float_info
 
 from linalg import Matrix, Vector, dot, matvec, norm
-from solvers.base import LinearSolver
 from solvers.common import IterationState, Options, Result
 
 
@@ -11,13 +10,11 @@ def _near_orthogonal(value: float, x: Vector, y: Vector) -> bool:
     return abs(value) <= 16 * float_info.epsilon * norm(x) * norm(y)
 
 
-class BiCGSTABSolver(LinearSolver):
-    method = "bicgstab"
-
-    def _solve(self, a: Matrix, f: Vector, options: Options) -> Result:
+def bicgstab(a: Matrix, f: Vector, options: Options) -> Result:
+    try:
         state = IterationState("bicgstab", a, f, options)
         initial = state.initial_result()
-        if initial:
+        if initial is not None:
             return initial
         r, shadow = f[:], f[:]
         p, v = [0.0] * len(f), [0.0] * len(f)
@@ -67,3 +64,5 @@ class BiCGSTABSolver(LinearSolver):
             else:
                 rho_old = rho
         return state.finish("iteration_limit")
+    except (ArithmeticError, ValueError) as error:
+        return Result("bicgstab", "breakdown", detail=f"Numerical arithmetic failed: {error}")

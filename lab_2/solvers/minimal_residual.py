@@ -1,22 +1,19 @@
 """The one-step minimal residual method with an optimal residual step."""
 
 from linalg import Matrix, Vector, dot, matvec
-from solvers.base import LinearSolver
 from solvers.common import IterationState, Options, Result
 
 
-class MinimalResidualSolver(LinearSolver):
-    method = "minres"
+def minimal_residual(a: Matrix, f: Vector, options: Options) -> Result:
+    """One-step iteration: x+=tau*r, tau=(Ar,r)/(Ar,Ar).
 
-    def _solve(self, a: Matrix, f: Vector, options: Options) -> Result:
-        """One-step iteration: x+=tau*r, tau=(Ar,r)/(Ar,Ar).
-
-        This implements the assignment's one-step minimal residual method.
-        Stagnation on an arbitrary matrix is reported to the caller.
-        """
+    This implements the assignment's one-step minimal residual method.
+    Stagnation on an arbitrary matrix is reported to the caller.
+    """
+    try:
         state = IterationState("minres", a, f, options)
         initial = state.initial_result()
-        if initial:
+        if initial is not None:
             return initial
         r = f[:]
         for _ in range(options.max_iterations):
@@ -32,3 +29,5 @@ class MinimalResidualSolver(LinearSolver):
             if status:
                 return state.finish(status)
         return state.finish("iteration_limit")
+    except (ArithmeticError, ValueError) as error:
+        return Result("minres", "breakdown", detail=f"Numerical arithmetic failed: {error}")

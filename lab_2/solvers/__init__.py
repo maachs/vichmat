@@ -1,20 +1,16 @@
-"""Hand-written linear system solvers behind a common interface."""
+"""Hand-written linear system solvers with the interface (a, f, options)."""
 
-from solvers.base import LinearSolver
-from solvers.bicgstab import BiCGSTABSolver
-from solvers.conjugate_gradient import ConjugateGradientSolver
-from solvers.gauss_seidel import GaussSeidelSolver
-from solvers.gaussian_elimination import GaussianEliminationSolver
-from solvers.gradient_descent import GradientDescentSolver
-from solvers.jacobi import JacobiSolver
-from solvers.lu_factorization import LUFactorizationSolver
-from solvers.minimal_residual import MinimalResidualSolver
-from solvers.sor import SORSolver
+from solvers.bicgstab import bicgstab
+from solvers.conjugate_gradient import conjugate_gradient
+from solvers.gauss_seidel import gauss_seidel
+from solvers.gaussian_elimination import gaussian_elimination
+from solvers.gradient_descent import gradient_descent
+from solvers.jacobi import jacobi
+from solvers.lu_factorization import lu_factorization
+from solvers.minimal_residual import minimal_residual
+from solvers.sor import sor
 
-
-def default_solvers() -> tuple[LinearSolver, ...]:
-    return (
-        GaussianEliminationSolver(), LUFactorizationSolver(), JacobiSolver(),
-        GaussSeidelSolver(), SORSolver(), GradientDescentSolver(),
-        MinimalResidualSolver(), ConjugateGradientSolver(), BiCGSTABSolver(),
-    )
+SOLVERS = (
+    gaussian_elimination, lu_factorization, jacobi, gauss_seidel, sor,
+    gradient_descent, minimal_residual, conjugate_gradient, bicgstab,
+)
